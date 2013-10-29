@@ -1,6 +1,7 @@
 You can install the app using .apk placed in the root of this repository. You need to define two parameters - phone number and server address.
 
-__Phone number:_ This number will be dialed when the phone is disconnected from charger.
+__Phone number:__ This number will be dialed when the phone is disconnected from charger.
+
 __Server address:__ Address where is accessible write.php script from WEB-UI directory. When phone is not connected to charger it sends data to this script and the data are stored in network.csv and gps.csv files depending on the source of position.
 
 Application behaviour
