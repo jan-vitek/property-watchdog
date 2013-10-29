@@ -10,6 +10,8 @@ When application is started, a form will appear. Fill required data to the form 
 
 When service is started, notification appears in notification bar. The main application can be closed now and serevice waits for power disconnected event. When it occures it starts to send position data and calls the selected number.
 
+GPS position data are sent after at least 10s or at least 3m difference. Network position data are sent after at least 30s or at least 50m difference.
+
 You can find if the service is running using __State?__ button and stop stop it using __Stop__ button.
 
 If the number is invalid, i.e. empty string, it does not affect data sending.
@@ -36,5 +38,8 @@ When there is just one location in csv files it is not shown on the map. Only li
 
 It takes about 5 seconds until the first data are fetched to the web application.
 
+Tested devices
+--------------
+HTC EVO 3D - Android 4.0.3 - 3.28.401.1
 
 
