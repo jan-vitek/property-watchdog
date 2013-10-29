@@ -1,0 +1,67 @@
+<html>
+  <head>
+   <link href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.css" media="screen" rel="stylesheet" type="text/css" />
+  <!--[if lt IE 8]>
+<link href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.ie.css" media="screen" rel="stylesheet" type="text/css" />
+<![endif]-->
+  
+  
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.js" type="text/javascript"></script>
+   
+<link href="index.css" media="all" rel="stylesheet" type="text/css" />
+ </head> 
+
+  <body>
+  <div id="map_dashboard"></div>
+  
+<script>
+  $.ajaxSetup({ cache: false });
+  var locations = [];
+  
+  var int=self.setInterval(function(){reload_data()}, 10000);
+  var map = new L.Map('map_dashboard');
+  var poly_line_red = new L.Polyline([], {color: 'red'}).addTo(map);
+  var poly_line_blue = new L.Polyline([], {color: 'blue'}).addTo(map);
+
+
+  function reload_data() {
+    $.get("gps.csv", function(data){parse_data(data, poly_line_red)});
+    $.get("network.csv", function(data){parse_data(data, poly_line_blue)});
+  }
+
+  function parse_data(data, poly_line){
+    console.log('reloading')
+    locations = [];
+    var lines = data.split('\n');
+    lines.forEach(function(entry){
+     var fields = entry.split('; ');
+     if(!isNaN(parseFloat(fields[0])) && !isNaN(parseFloat(fields[1]))){
+       console.log(parseFloat(fields[0]));
+       var pos = new L.LatLng(parseFloat(fields[0]),parseFloat(fields[1]));
+       locations.push(pos);
+     }
+     poly_line.setLatLngs(locations);
+    });
+  }
+
+  function initMap() {
+		var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+		var osmAttrib = 'Smrt';
+		var osm = new L.TileLayer(osmUrl, {
+			minZoom : 1,
+			maxZoom : 30,
+			attribution : osmAttrib
+		});
+		 map.setView(new L.LatLng(49.743611, 15.338611), 8);
+                 map.addLayer(osm);
+}
+  Window.onload = initMap();
+ </script>
+  
+  
+  
+  
+
+  </body>
+</html>
