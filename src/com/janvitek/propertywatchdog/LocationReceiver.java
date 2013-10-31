@@ -8,7 +8,8 @@ public class LocationReceiver implements LocationListener {
 
 	@Override
 	public void onLocationChanged(Location loc) {
-	    MyDialer.getInstance().sendLocation(loc);
+	    //MyDialer.getInstance().sendLocation(loc);
+		MyDialer.getInstance().saveLocationToSd(loc);
 	}
 
 	@Override

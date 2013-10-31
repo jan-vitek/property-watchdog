@@ -1,6 +1,7 @@
 You can install the app using .apk placed in the root of this repository. You need to define two parameters - phone number and server address.
 
-__Phone number:_ This number will be dialed when the phone is disconnected from charger.
+__Phone number:__ This number will be dialed when the phone is disconnected from charger.
+
 __Server address:__ Address where is accessible write.php script from WEB-UI directory. When phone is not connected to charger it sends data to this script and the data are stored in network.csv and gps.csv files depending on the source of position.
 
 Application behaviour
@@ -8,6 +9,8 @@ Application behaviour
 When application is started, a form will appear. Fill required data to the form and press __Set__ button. The data are stored, and they will automatically loaded next time. Before you run the monitoring service, you can check current configuration below the __Set__ button.
 
 When service is started, notification appears in notification bar. The main application can be closed now and serevice waits for power disconnected event. When it occures it starts to send position data and calls the selected number.
+
+GPS position data are sent after at least 10s or at laest 3m difference. Network position data are sent after at least 30s or at least 50m difference.
 
 You can find if the service is running using __State?__ button and stop stop it using __Stop__ button.
 
@@ -35,5 +38,8 @@ When there is just one location in csv files it is not shown on the map. Only li
 
 It takes about 5 seconds until the first data are fetched to the web application.
 
+Tested devices
+--------------
+HTC EVO 3D - Android 4.0.3 - 3.28.401.1
 
 

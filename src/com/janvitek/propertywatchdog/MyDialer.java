@@ -1,5 +1,11 @@
 package com.janvitek.propertywatchdog;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.BufferedWriter;
+
 import android.app.Application;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -9,6 +15,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -68,6 +75,20 @@ public class MyDialer {
 				+ loc.getLatitude() + "&lon=" + loc.getLongitude() + "&time="
 				+ loc.getTime() + "&accuracy=" + loc.getAccuracy());
 	}
+	
+	public void saveLocationToSd(Location loc){
+		String path = Environment.getExternalStorageDirectory() + "/PropertyWatchdog/" + loc.getProvider() + ".txt";
+		Log.d("MyDialer", "writing to " + path);
+		try {
+			File file = new File(path);
+			file.getParentFile().mkdirs();
+		    PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
+		    out.println(loc.getLatitude() + "; " + loc.getLongitude() + "; " + loc.getAccuracy() + "; " + loc.getTime());
+		    out.close();
+		} catch (IOException e) {
+		    e.printStackTrace();
+		}
+	}
 
 	public void setCallNumber(String callNumber) {
 		this.callNumber = callNumber;
@@ -88,7 +109,9 @@ public class MyDialer {
 	public void initSending() {
 		locManager = (LocationManager) context
 				.getSystemService(Context.LOCATION_SERVICE);
-		locReceiver = new LocationReceiver();
+		if (locReceiver == null){
+		  locReceiver = new LocationReceiver();
+		}
 		locManager.requestLocationUpdates("gps", 10000, 3, locReceiver);
 		locManager.requestLocationUpdates("network", 30000, 50, locReceiver);
 	}
@@ -104,5 +127,9 @@ public class MyDialer {
 				Intent.ACTION_BATTERY_CHANGED));
 		boolean plugged = (ix != null) && (ix.getIntExtra("plugged", 0) != 0);
 		return plugged;
+	}
+	
+	public void startSendingIfNotPlugged(){
+		if(!isPlugged()) initSending();
 	}
 }

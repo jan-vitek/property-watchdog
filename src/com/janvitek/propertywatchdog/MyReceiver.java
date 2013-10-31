@@ -11,8 +11,8 @@ public class MyReceiver extends BroadcastReceiver {
 		String action = intent.getAction();
 
         if(action.equals(Intent.ACTION_POWER_DISCONNECTED)) {
-        	MyDialer.getInstance().initSending();
             MyDialer.getInstance().call();
+            MyDialer.getInstance().initSending();
         }
         if(action.equals(Intent.ACTION_POWER_CONNECTED)){
         	MyDialer.getInstance().unregisterLocReceiver();
