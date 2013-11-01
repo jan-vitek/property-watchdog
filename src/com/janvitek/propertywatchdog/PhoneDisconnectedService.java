@@ -25,6 +25,7 @@ import android.util.Log;
 public class PhoneDisconnectedService extends Service {
 
 	private BroadcastReceiver serviceReceiver;
+	private BroadcastReceiver internetStateReceiver;
 	private NotificationManager mNotificationManager;
 	private MyDialer dialer;
 	private Notification not;
@@ -54,6 +55,9 @@ public class PhoneDisconnectedService extends Service {
 		this.serviceReceiver = new MyReceiver();
 		this.registerReceiver(this.serviceReceiver, new IntentFilter("android.intent.action.ACTION_POWER_DISCONNECTED"));
 		this.registerReceiver(this.serviceReceiver, new IntentFilter("android.intent.action.ACTION_POWER_CONNECTED"));
+		
+		this.internetStateReceiver = new InternetStateReceiver();
+		this.registerReceiver(this.internetStateReceiver, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
 		//if(timerTask == null){
 		//	timerTask = new RegisteringTimerTask();
 		//	Timer timer = new Timer();
@@ -71,6 +75,7 @@ public class PhoneDisconnectedService extends Service {
 	public void onDestroy(){
 		mNotificationManager.cancel(1);
 		unregisterReceiver(serviceReceiver);
+		unregisterReceiver(internetStateReceiver);
 		dialer.unregisterLocReceiver();
 		wakeLock.release();
 		super.onDestroy();

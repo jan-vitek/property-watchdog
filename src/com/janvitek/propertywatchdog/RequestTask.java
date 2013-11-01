@@ -1,7 +1,11 @@
 package com.janvitek.propertywatchdog;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -11,7 +15,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.location.Location;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.util.Log;
 
 class RequestTask extends AsyncTask<String, String, String>{
@@ -36,9 +42,9 @@ class RequestTask extends AsyncTask<String, String, String>{
                 throw new IOException(statusLine.getReasonPhrase());
             }
         } catch (ClientProtocolException e) {
-            //TODO Handle problems..
+            saveFailedUri(uri[0]);
         } catch (IOException e) {
-            //TODO Handle problems..
+            saveFailedUri(uri[0]);
         }
         return responseString;
     }
@@ -48,4 +54,18 @@ class RequestTask extends AsyncTask<String, String, String>{
         super.onPostExecute(result);
         Log.d("RequestTask", "result: " + result);
     }
+    
+    public void saveFailedUri(String uri){
+		String path = Environment.getExternalStorageDirectory() + "/PropertyWatchdog/" + "failedUri.txt";
+		Log.d("RequestTask", "writing to " + path);
+		try {
+			File file = new File(path);
+			file.getParentFile().mkdirs();
+		    PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
+		    out.println(uri);
+		    out.close();
+		} catch (IOException e) {
+		    e.printStackTrace();
+		}
+	}
 }
