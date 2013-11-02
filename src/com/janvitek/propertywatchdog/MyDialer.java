@@ -44,6 +44,9 @@ public class MyDialer {
 		this.context = context;
 	}
 
+	public Context getContext(){
+		return context;
+	}
 	public void loadSettings(boolean startSending) {
 		mySettings = context.getSharedPreferences("mySettingsFile", 0);
 		callNumber = mySettings.getString("callNumber", "");

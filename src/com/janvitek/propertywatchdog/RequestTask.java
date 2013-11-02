@@ -3,6 +3,8 @@ package com.janvitek.propertywatchdog;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,6 +17,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.content.Context;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -55,11 +58,15 @@ class RequestTask extends AsyncTask<String, String, String>{
         Log.d("RequestTask", "result: " + result);
     }
     
+    /**
+     * old saveFailedUri() method using external storage
+     * 
     public void saveFailedUri(String uri){
 		String path = Environment.getExternalStorageDirectory() + "/PropertyWatchdog/" + "failedUri.txt";
 		Log.d("RequestTask", "writing to " + path);
 		try {
 			File file = new File(path);
+			file.getParentFile().mkdirs();
 			file.getParentFile().mkdirs();
 		    PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
 		    out.println(uri);
@@ -68,4 +75,19 @@ class RequestTask extends AsyncTask<String, String, String>{
 		    e.printStackTrace();
 		}
 	}
+	*/
+    public void saveFailedUri(String uri){
+        Log.d("RequestTask","Saving failed uri");
+		try {
+			FileOutputStream fos = MyDialer.getInstance().getContext().openFileOutput("failedUri.txt", Context.MODE_APPEND);
+			fos.write(uri.getBytes());
+	    	fos.close();
+		} catch (FileNotFoundException e) {
+			Log.e("RequestTask", "File not found exception while saving failed uri");
+		} catch (IOException e) {
+			Log.e("RequestTask", "IO exception while saving failed uri");
+		}
+    }
+    
+    
 }
